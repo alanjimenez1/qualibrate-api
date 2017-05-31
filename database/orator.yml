@@ -1,0 +1,5 @@
+databases:
+    sqlite:
+        driver: sqlite
+        database: /sw/apps2/qualibrate/database/development.sqlite
+        
