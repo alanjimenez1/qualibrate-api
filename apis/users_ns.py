@@ -1,27 +1,37 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
+"""
+This encloses all operations required to manipulate users
+in the Qualibrate Foundation Cloud platform
+"""
+
+__author__ = "@canimus"
+__license__ = "MIT"
+__revision__ = "1.0"
+
+import json
 from flask import request
 from flask_restplus import Namespace, Resource, fields
-from .utils import pagination
-from database import db
 from models.user import User as orm_user
-from schema import Schema
-import json
+from orator.exceptions.orm import ModelNotFound
+from .utils import pagination
 
-api = Namespace('users', description='Platform access administration')
+API = Namespace('users', description='Platform access administration')
 
-user = api.model('User', {
+USER = API.model('User', {
     'id': fields.Integer(required=True, description='Unique identifier', example='1'),
     'first_name': fields.String(required=True, description='First name', example='John'),
     'last_name': fields.String(required=True, description='Last name', example='Smith'),
     'email': fields.String(required=True, description='Contact email', example='jsmith@gmail.com')
 })
 
-@api.route('')
+# pylint: disable=no-self-use
+@API.route('')
 class UsersList(Resource):
+    """Endpoint for list-based user results."""
 
-    @api.marshal_list_with(user)
-    @api.response(200, 'User found')
-    @api.expect(pagination)
+    @API.marshal_list_with(USER)
+    @API.response(200, 'User found')
+    @API.expect(pagination)
     def get(self):
         """
         List all users
@@ -29,9 +39,12 @@ class UsersList(Resource):
         Returns a collection of users paginated and consolidated
         in bundles of 10 per page
         """
-        return orm_user.all().serialize(), 200
 
-    @api.expect(user)
+        # Retrieval of pagination parameters: page, per_page
+        page_args = pagination.parse_args()
+        return orm_user.paginate(page_args['per_page'], page_args['page']).serialize(), 200
+
+    @API.expect(USER)
     def post(self):
         """
         Creates a new user
@@ -40,23 +53,23 @@ class UsersList(Resource):
         and as credentials to authenticate in the platform.
         """
 
-        # Empty user creation
+        # User skeleton
         new_user = orm_user()
 
         # Parsing payload from json string to dict
         new_user.set_raw_attributes(json.loads(request.data))
         if new_user.save():
             return new_user.serialize(), 201
-        else:
-            None, 422
 
 
-@api.route('/<int:id>')
-@api.response(404, 'User not found')
+@API.route('/<int:id>')
+@API.response(404, 'User not found')
 class User(Resource):
-    @api.marshal_with(user)
-    @api.response(200, 'User found')
-    def get(self, id):
+    """Endpoint for users operations."""
+
+    @API.marshal_with(USER)
+    @API.response(200, 'User found')
+    def get(self, user_id):
         """
         Fetch a user by its identifier
 
@@ -65,12 +78,12 @@ class User(Resource):
         """
 
         try:
-            return orm_user.find(id).serialize() or api.abort(404)
-        except Exception as e:
-            api.abort(404)
+            return orm_user.find_or_fail(user_id).serialize() or API.abort(404)
+        except ModelNotFound:
+            API.abort(404)
 
-    @api.response(204, 'User successfully deleted')
-    def delete(self, id):
+    @API.response(204, 'User successfully deleted')
+    def delete(self, user_id):
         """
         Deletes an existing user
 
@@ -78,16 +91,15 @@ class User(Resource):
         to an individual user in Qualibrate
         """
 
-        old_user = orm_user.find(id)
+        old_user = orm_user.find(user_id)
 
         if old_user.delete():
             return id, 204
-        else:
-            return False, 422
 
-    @api.response(202, 'User successfully updated')
-    @api.expect(user)
-    def put(self, id):
+
+    @API.response(202, 'User successfully updated')
+    @API.expect(USER)
+    def put(self, user_id):
         """
         Updates an existing user
 
@@ -96,11 +108,9 @@ class User(Resource):
         """
 
         # Empty user creation
-        current_user = orm_user.find(id)
+        current_user = orm_user.find(user_id)
 
         # Parsing payload from json string to dict
         current_user.set_raw_attributes(json.loads(request.data))
         if current_user.save():
             return current_user.serialize(), 202
-        else:
-            None, 422
