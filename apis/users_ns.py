@@ -13,7 +13,7 @@ from flask import request
 from flask_restplus import Namespace, Resource, fields
 from models.user import User as orm_user
 from orator.exceptions.orm import ModelNotFound
-from .utils import pagination
+from .utils import PAGINATOR
 
 API = Namespace('users', description='Platform access administration')
 
@@ -31,7 +31,7 @@ class UsersList(Resource):
 
     @API.marshal_list_with(USER)
     @API.response(200, 'User found')
-    @API.expect(pagination)
+    @API.expect(PAGINATOR)
     def get(self):
         """
         List all users
@@ -41,7 +41,7 @@ class UsersList(Resource):
         """
 
         # Retrieval of pagination parameters: page, per_page
-        page_args = pagination.parse_args()
+        page_args = PAGINATOR.parse_args()
         return orm_user.paginate(page_args['per_page'], page_args['page']).serialize(), 200
 
     @API.expect(USER)

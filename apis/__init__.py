@@ -1,11 +1,19 @@
+# -*- coding: utf-8 -*-
+"""
+This module contains the blueprints for all
+entities in the Qualibrate Foundation Cloud platform
+"""
+__author__ = "@canimus"
+__license__ = "MIT"
+__revision__ = "1.0"
+
 from flask_restplus import Api
+from .users_ns import API as ns1
 
-from .users_ns import api as ns1
-
-api = Api(
+ENDPOINT = Api(
     title='Qualibrate Foundation API',
     version='1.0',
     description='Testing, documentation and training seamless framework'
 )
 
-api.add_namespace(ns1)
+ENDPOINT.add_namespace(ns1) # Users
