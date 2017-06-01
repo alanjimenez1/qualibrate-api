@@ -10,6 +10,8 @@ __revision__ = "1.0"
 
 import subprocess
 from shovel import task
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
 
 @task
 def dbstatus(name):
@@ -30,3 +32,14 @@ def test(module_folder):
 def lint(prefix="E"):
     '''Run linter on code'''
     print(subprocess.getoutput("pylint . | grep --colour -e \"^%s\"" % prefix))
+
+@task
+def stats():
+    '''Run lines of code analysis'''
+    result = subprocess.getoutput('cloc . | grep -e "^SUM:"')
+    files, blank, comment, code = [x for x in result.split(" ") if x != '' and x.isnumeric() ]
+    #print(files, blank, comment, code)
+    print(Fore.RED + Style.BRIGHT + "⌜" + str(files) + Fore.RESET, end=' ')
+    print(Fore.YELLOW + Style.BRIGHT + "⌟" + str(comment) + Fore.RESET, end=' ')
+    print(Fore.CYAN + Style.BRIGHT + "␣" + str(blank) + Fore.RESET, end=' ')
+    print(Fore.GREEN + Style.BRIGHT + "⌞" + str(code) + Fore.RESET)
