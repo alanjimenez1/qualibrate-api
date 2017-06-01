@@ -1,7 +1,18 @@
+# -*- coding: utf-8 -*-
+"""
+Python-Flask based application with various endpoits
+defined in Flask-restplus and swagger definitions
+
+__http://host:5000/swagger__
+"""
+__author__ = "@canimus"
+__license__ = "MIT"
+__revision__ = "1.0"
+
 from flask import Flask
-from apis import api
+from apis import ENDPOINT
 
-app = Flask(__name__)
-api.init_app(app)
+APP = Flask(__name__)
+ENDPOINT.init_app(APP)
 
-app.run(debug=True)
+APP.run(debug=True)
