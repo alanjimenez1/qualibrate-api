@@ -1,5 +1,4 @@
 flask
 flask-restplus
 orator
-schema
-requests
+shovel
