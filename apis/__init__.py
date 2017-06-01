@@ -8,7 +8,8 @@ __license__ = "MIT"
 __revision__ = "1.0"
 
 from flask_restplus import Api
-from .users_ns import API as ns1
+from .users_ns import API as users
+from .projects_ns import API as projects
 
 ENDPOINT = Api(
     title='Qualibrate Foundation API',
@@ -16,4 +17,5 @@ ENDPOINT = Api(
     description='Testing, documentation and training seamless framework'
 )
 
-ENDPOINT.add_namespace(ns1) # Users
+ENDPOINT.add_namespace(users) # Users
+ENDPOINT.add_namespace(projects) # Projects

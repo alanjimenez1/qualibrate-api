@@ -8,7 +8,10 @@ class CreateProjectsTable(Migration):
         Run the migrations.
         """
         with self.schema.create('projects') as table:
-            table.increments('id')
+            table.string('id')
+            table.string('name')
+            table.string('code')
+            table.boolean('active')
             table.timestamps()
 
     def down(self):

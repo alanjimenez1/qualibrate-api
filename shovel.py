@@ -29,9 +29,15 @@ def test(module_folder):
     print(subprocess.getoutput("python -m unittest test/%s/*_test.py -v" % module_folder))
 
 @task
-def lint(prefix="E"):
+def lint():
     '''Run linter on code'''
-    print(subprocess.getoutput("pylint . | grep --colour -e \"^%s\"" % prefix))
+    print(subprocess.getoutput("pylint ."))
+
+@task
+def data_sample(table_name, rows=10):
+    '''Returns a simple sample of data from the database'''
+    print(subprocess.getoutput('sqlite3 -header -column database/development.sqlite "select * from %s limit %s"' % (table_name, rows)))
+
 
 @task
 def stats():

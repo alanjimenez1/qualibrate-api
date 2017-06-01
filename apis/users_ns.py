@@ -14,11 +14,12 @@ from flask_restplus import Namespace, Resource, fields
 from models.user import User as orm_user
 from orator.exceptions.orm import ModelNotFound
 from .utils import PAGINATOR
+import uuid
 
 API = Namespace('users', description='Platform access administration')
 
 USER = API.model('User', {
-    'id': fields.Integer(required=True, description='Unique identifier', example='1'),
+    'id': fields.String(required=True, description='Unique identifier', example='1'),
     'first_name': fields.String(required=True, description='First name', example='John'),
     'last_name': fields.String(required=True, description='Last name', example='Smith'),
     'email': fields.String(required=True, description='Contact email', example='jsmith@gmail.com')
@@ -55,6 +56,7 @@ class UsersList(Resource):
 
         # User skeleton
         new_user = orm_user()
+        new_user.id = uuid.uuid1().hex
 
         # Parsing payload from json string to dict
         new_user.set_raw_attributes(json.loads(request.data))

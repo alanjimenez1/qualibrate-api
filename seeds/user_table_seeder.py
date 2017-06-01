@@ -1,6 +1,7 @@
 from orator.seeds import Seeder
 from orator.orm import Factory
 from models.user import User
+import uuid
 
 class UserTableSeeder(Seeder):
 
@@ -9,6 +10,7 @@ class UserTableSeeder(Seeder):
         Defines the template of user test records
         """
         return {
+            'id' : uuid.uuid1().hex,
             'first_name': faker.first_name(),
             'last_name': faker.last_name(),
             'email' : faker.email()
