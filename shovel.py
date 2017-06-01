@@ -25,7 +25,7 @@ def install():
 
 @task
 def test(module_folder):
-    '''Test all models'''
+    '''Test specific modules'''
     print(subprocess.getoutput("python -m unittest test/%s/*_test.py -v" % module_folder))
 
 @task
@@ -35,11 +35,10 @@ def lint(prefix="E"):
 
 @task
 def stats():
-    '''Run lines of code analysis'''
+    '''Code analysis ⌜:files ⌟:comments ␣:blank ⌞:lines'''
     result = subprocess.getoutput('cloc . | grep -e "^SUM:"')
     files, blank, comment, code = [x for x in result.split(" ") if x != '' and x.isnumeric() ]
-    #print(files, blank, comment, code)
-    print(Fore.RED + Style.BRIGHT + "⌜" + str(files) + Fore.RESET, end=' ')
-    print(Fore.YELLOW + Style.BRIGHT + "⌟" + str(comment) + Fore.RESET, end=' ')
-    print(Fore.CYAN + Style.BRIGHT + "␣" + str(blank) + Fore.RESET, end=' ')
-    print(Fore.GREEN + Style.BRIGHT + "⌞" + str(code) + Fore.RESET)
+    print(Style.BRIGHT + Fore.CYAN + "⌜" + Fore.RESET + str(files) , end=' ')
+    print(Style.BRIGHT + Fore.CYAN + "⌟" + Fore.RESET + str(comment) , end=' ')
+    print(Style.BRIGHT + Fore.CYAN + "␣" + Fore.RESET + str(blank) , end=' ')
+    print(Style.BRIGHT + Fore.CYAN + "⌞" + Fore.RESET + str(code) )
