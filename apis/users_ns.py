@@ -9,12 +9,12 @@ __license__ = "MIT"
 __revision__ = "1.0"
 
 import json
+import uuid
 from flask import request
 from flask_restplus import Namespace, Resource, fields
 from models.user import User as orm_user
 from orator.exceptions.orm import ModelNotFound
 from .utils import PAGINATOR
-import uuid
 
 API = Namespace('users', description='Platform access administration')
 

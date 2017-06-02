@@ -10,7 +10,9 @@ class CreateProjectsTable(Migration):
         with self.schema.create('projects') as table:
             table.string('id')
             table.string('name')
+            table.long_text('description')
             table.string('code')
+            table.string('icon')
             table.boolean('active')
             table.timestamps()
 

@@ -1,7 +1,7 @@
+import uuid
 from orator.seeds import Seeder
 from orator.orm import Factory
 from models.user import User
-import uuid
 
 class UserTableSeeder(Seeder):
 
