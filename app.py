@@ -15,4 +15,5 @@ from apis import ENDPOINT
 APP = Flask(__name__)
 ENDPOINT.init_app(APP)
 
-APP.run(debug=True)
+if __name__ == '__main__':
+    APP.run(debug=False)

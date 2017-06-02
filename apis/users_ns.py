@@ -64,14 +64,14 @@ class UsersList(Resource):
             return new_user.serialize(), 201
 
 
-@API.route('/<int:id>')
+@API.route('/<string:id>')
 @API.response(404, 'User not found')
 class User(Resource):
     """Endpoint for users operations."""
 
     @API.marshal_with(USER)
     @API.response(200, 'User found')
-    def get(self, user_id):
+    def get(self, id):
         """
         Fetch a user by its identifier
 
@@ -80,7 +80,7 @@ class User(Resource):
         """
 
         try:
-            return orm_user.find_or_fail(user_id).serialize() or API.abort(404)
+            return orm_user.find_or_fail(id).serialize() or API.abort(404)
         except ModelNotFound:
             API.abort(404)
 

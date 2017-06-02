@@ -6,3 +6,6 @@ Faker
 colorama
 httpie
 pylint
+gunicorn
+eventlet
+tornado
