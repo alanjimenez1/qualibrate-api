@@ -1,3 +1,12 @@
+# Create app environment
+docker-machine create qfphost -d virtualbox --virtualbox-share-folder /sw/apps2/qualibrate:/home/docker/app --virtualbox-cpu-count 3
+
+# Build the app
+docker build -t qfpapi .
+
+# Run the app
+docker run -d --name qfpapi-01 -p 5000:5000 qfpapi
+
 # Creates instance for database
 docker run --name mysqldb -e MYSQL_ROOT_PASSWORD=root -p 3306:3306 -d mysql:5.7
 

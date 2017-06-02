@@ -16,4 +16,4 @@ APP = Flask(__name__)
 ENDPOINT.init_app(APP)
 
 if __name__ == '__main__':
-    APP.run(debug=False)
+    APP.run(debug=False, host="0.0.0.0",port=5000)
