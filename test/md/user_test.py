@@ -17,11 +17,9 @@ class UserModelTest(unittest.TestCase):
         '''Confirm all the expected attributes of the model'''
         expected_attrs = set(["id", "email", "last_name", "first_name"])
         actual_attrs = set(User.first().get_attributes().keys())
-        self.assertTrue(expected_attrs.issubset(actual_attrs))
+        self.assertTrue(expected_attrs.issubset(actual_attrs), 'One of the attributes does not exist')
 
     def test_pagination(self):
-        """
-        Retrieves pages of users from the database
-        """
+        '''Retrieves pages of users from the database'''
         user_list = User.paginate(10, 1)
         self.assertEqual(len(user_list), 10)

@@ -26,7 +26,7 @@ def install():
 @task
 def test(module_folder):
     '''Test specific modules'''
-    print(subprocess.getoutput("python -m unittest test/%s/*_test.py -v" % module_folder))
+    print(subprocess.getoutput("python -m unittest test/%s/*_test.py" % module_folder))
 
 @task
 def lint():
