@@ -8,3 +8,6 @@ __pycache__/
 
 # Databases
 *.sqlite
+
+# Data
+.data/

@@ -11,6 +11,5 @@ ENV FLASK_ENVIRONMENT=${FLASK_ENV:-production}
 RUN echo $FLASK_ENVIRONMENT
 
 COPY . .
-RUN orator migrate -c "database/orator_$FLASK_ENVIRONMENT.yml" -d mysql
 
 CMD [ "gunicorn", "-w", "4", "app:APP", "--worker-class", "gevent", "--bind", "0.0.0.0:5000" ]
