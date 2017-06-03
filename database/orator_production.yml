@@ -1,0 +1,9 @@
+databases:
+  default: mysql
+  mysql:
+    driver: mysql
+    host: qfp-db
+    database: qfp_active
+    user: root
+    password: root
+    prefix:

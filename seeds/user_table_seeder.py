@@ -11,9 +11,12 @@ class UserTableSeeder(Seeder):
         """
         return {
             'id' : uuid.uuid1().hex,
+            'uid' : faker.ssn(),
+            'provider' : faker.company(),
             'first_name': faker.first_name(),
             'last_name': faker.last_name(),
-            'email' : faker.email()
+            'email' : faker.email(),
+            'active' : True
         }
 
     def run(self):

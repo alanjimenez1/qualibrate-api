@@ -15,10 +15,10 @@ class CreateUsersTable(Migration):
             table.string('last_name')
             table.string('email')
             table.boolean('active')
-            table.datatime('activated_at') # Email confirmed event
-            table.datatime('token_at') # Account change event
-            table.datatime('login_at') # Last login event
-            table.datatime('logou_at') # Last logout event
+            table.datetime('activated_at').nullable() # Email confirmed event
+            table.datetime('token_at').nullable() # Account change event
+            table.datetime('login_at').nullable() # Last login event
+            table.datetime('logou_at').nullable() # Last logout event
             table.timestamps()
 
     def down(self):

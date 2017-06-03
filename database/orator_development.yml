@@ -1,0 +1,5 @@
+databases:
+  default: sqlite  
+  sqlite:
+      driver: sqlite
+      database: ./database/development.sqlite
