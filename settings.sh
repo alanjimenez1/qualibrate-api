@@ -3,6 +3,10 @@ docker-machine create qfphost -d virtualbox --virtualbox-share-folder /sw/apps2/
 docker-machine create qfphost -d virtualbox --virtualbox-share-folder /sw/apps2/qualibrate:/home/docker/app --virtualbox-cpu-count 3 --virtualbox-boot2docker-url "file://$HOME/Downloads/CentOS-7-x86_64-Minimal-1611.iso"
 
 
+# Docker compose
+curl -L https://github.com/docker/compose/releases/download/1.13.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+chmod +x docker-compose
+
 # Set environment for host
 eval $(docker-machine env qfphost)
 
@@ -21,6 +25,8 @@ docker volume create --driver local --opt type=btrfs --opt device=/home/docker/a
 docker volume create --driver local --opt type=btrfs --opt device=/home/docker/app/.data --opt o=size=100m,uid=1000:50 qfp-data
 docker volume create --driver local --opt type=btrfs --opt device=/mnt/sda1/qfp-data qfp-data
 
+# Web Server
+docker run --name qfp-web --network qfp-nw -v /home/docker/app/static:/usr/share/nginx/html:ro -v /home/docker/app/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx
 
 
 # Creates instance for database
@@ -28,7 +34,7 @@ docker run -d --name qfp-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=qfp_ac
 docker run -d --name qfp-db -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=qfp_active -p 3306:3306 --network qfp-nw -v /home/docker/app/.data:/var/lib/mysql:rw mysql:5.7
 
 # Build the app
-docker build -t qfpapi --build-arg FLASK_ENV=production /home/docker/app
+docker build -t qfpapi --build-arg FLASK_ENV=production .
 
 # Run the app
 docker run -d --name qfp-app -p 5000:5000 --network qfp-nw qfpapi

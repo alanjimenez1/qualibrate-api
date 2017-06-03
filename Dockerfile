@@ -12,4 +12,4 @@ RUN echo $FLASK_ENVIRONMENT
 
 COPY . .
 
-CMD [ "gunicorn", "-w", "4", "app:APP", "--worker-class", "gevent", "--bind", "0.0.0.0:5000" ]
+CMD [ "gunicorn", "-w", "4", "app:APP", "--worker-class", "gevent", "--bind", "0.0.0.0:5000", "--pid", "/tmp/gunicorn.pid" ]
