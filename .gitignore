@@ -11,4 +11,4 @@
 *.sqlite
 
 # Data
-.data/
+**/.data/
