@@ -44,7 +44,7 @@ def stats():
     '''Code analysis ⌜:files ⌟:comments ␣:blank ⌞:lines'''
     result = subprocess.getoutput('cloc . | grep -e "^SUM:"')
     files, blank, comment, code = [x for x in result.split(" ") if x != '' and x.isnumeric() ]
-    print(Style.BRIGHT + Fore.CYAN + "⌜" + Fore.RESET + str(files) , end=' ')
-    print(Style.BRIGHT + Fore.CYAN + "⌟" + Fore.RESET + str(comment) , end=' ')
-    print(Style.BRIGHT + Fore.CYAN + "␣" + Fore.RESET + str(blank) , end=' ')
-    print(Style.BRIGHT + Fore.CYAN + "⌞" + Fore.RESET + str(code) )
+    print(Style.BRIGHT + Fore.CYAN + "⌜" + Fore.RESET + '{0:<4}'.format(str(files)) , end=' ')
+    print(Style.BRIGHT + Fore.CYAN + "⌟" + Fore.RESET + '{0:<4}'.format(str(comment)) , end=' ')
+    print(Style.BRIGHT + Fore.CYAN + "␣" + Fore.RESET + '{0:<4}'.format(str(blank)) , end=' ')
+    print(Style.BRIGHT + Fore.CYAN + "⌞" + Fore.RESET + '{0:<4}'.format(str(code)) )
