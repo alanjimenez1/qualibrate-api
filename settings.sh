@@ -67,7 +67,8 @@ PYTHONPATH=.:models orator migrate:refresh -c "database/orator_$FLASK_ENVIRONMEN
 PYTHONPATH=.:models python test/models/user_test.py
 
 # Performance benchmarking
-gunicorn -w 4 app:APP --worker-class tornado
+gunicorn -w 4 --worker-class=tornado app:APP
+gunicorn -w 4 --worker-class="egg:meinheld#gunicorn_worker" app:APP
 wrk -c 10 -d 10 http://127.0.0.1:8000/users/6ef9d6dc46ff11e79d9a7831c1d2599c
 wrk -c 10 -d 10 http://127.0.0.1:8000/users
 wrk -c 10 -d 10 http://192.168.99.100:5000/users

@@ -14,11 +14,11 @@ from flask import Flask
 from apis import ENDPOINT
 
 # Enabling logging for database queries
-LOGGER = logging.getLogger('orator.connection.queries')
-LOGGER.setLevel(logging.DEBUG)
-
-# Stream log into the standard output
-LOGGER.addHandler(logging.StreamHandler())
+# LOGGER = logging.getLogger('orator.connection.queries')
+# LOGGER.setLevel(logging.DEBUG)
+#
+# # Stream log into the standard output
+# LOGGER.addHandler(logging.StreamHandler())
 
 APP = Flask(__name__)
 ENDPOINT.init_app(APP)
