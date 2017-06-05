@@ -26,7 +26,7 @@ docker volume create --driver local --opt type=btrfs --opt device=/home/docker/a
 docker volume create --driver local --opt type=btrfs --opt device=/mnt/sda1/qfp-data qfp-data
 
 # Web Server
-docker run --name qfp-web --network qfp-nw -v /home/docker/app/static:/usr/share/nginx/html:ro -v /home/docker/app/nginx.conf:/etc/nginx/nginx.conf:ro -d nginx
+docker run --name qfp-web --network qfp-nw -v /home/docker/app/static:/usr/share/nginx/html:ro -v /home/docker/app/nginx.conf:/etc/nginx/nginx.conf:ro -p 80:80 -d nginx
 
 
 # Creates instance for database
