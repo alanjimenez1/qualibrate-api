@@ -69,8 +69,8 @@ class UsersList(Resource):
 class User(Resource):
     """Endpoint for users operations."""
 
-    @API.marshal_with(USER)
     @API.response(200, 'User found')
+    @API.marshal_with(USER)
     def get(self, user_id):
         """
         Fetch a user by its identifier
@@ -80,9 +80,9 @@ class User(Resource):
         """
 
         try:
-            return orm_user.find_or_fail(user_id).serialize() or API.abort(404)
+            return orm_user.find_or_fail(user_id).serialize()
         except ModelNotFound:
-            API.abort(404)
+            API.abort(code=404, message='User not found')
 
     @API.response(204, 'User successfully deleted')
     def delete(self, user_id):
@@ -118,6 +118,7 @@ class User(Resource):
             return current_user.serialize(), 202
 
 @API.route('/<int:user_id>/projects')
+@API.response(200, 'Project list')
 @API.response(404, 'User without projects')
 class UserWithProjects(Resource):
     """
@@ -131,6 +132,6 @@ class UserWithProjects(Resource):
         A list of projects that belong to a particular user
         """
         try:
-            return orm_user.find_or_fail(user_id).projects.serialize() or API.abort(404)
+            return orm_user.find_or_fail(user_id).projects.serialize()
         except ModelNotFound:
             API.abort(404)
