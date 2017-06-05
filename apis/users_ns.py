@@ -19,7 +19,7 @@ from .utils import PAGINATOR
 API = Namespace('users', description='Platform access administration')
 
 USER = API.model('User', {
-    'id': fields.String(required=True, description='Unique identifier', example='1'),
+    'id': fields.Integer(required=True, description='Unique identifier', example='1'),
     'first_name': fields.String(required=True, description='First name', example='John'),
     'last_name': fields.String(required=True, description='Last name', example='Smith'),
     'email': fields.String(required=True, description='Contact email', example='jsmith@gmail.com')
@@ -64,7 +64,7 @@ class UsersList(Resource):
             return new_user.serialize(), 201
 
 
-@API.route('/<string:id>')
+@API.route('/<int:id>')
 @API.response(404, 'User not found')
 class User(Resource):
     """Endpoint for users operations."""
@@ -116,3 +116,18 @@ class User(Resource):
         current_user.set_raw_attributes(json.loads(request.data))
         if current_user.save():
             return current_user.serialize(), 202
+
+@API.route('/<int:id>/projects')
+@API.response(404, 'User without projects')
+class UserWithProjects(Resource):
+    """
+    Fetch all the projects for an individual user
+
+    Projects are the test asset containers in Qualibrate
+    and contains all information about a test project
+    """
+    def get(self, id):
+        try:
+            return orm_user.find_or_fail(id).projects.serialize() or API.abort(404)
+        except ModelNotFound:
+            API.abort(404)

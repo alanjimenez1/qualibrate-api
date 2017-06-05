@@ -14,9 +14,9 @@ from colorama import Fore, Back, Style, init
 init(autoreset=True)
 
 @task
-def dbstatus(name):
-    '''Provides the status of the current migrations'''
-    print(subprocess.getoutput("orator migrate:status --config=database/orator.yml -d %s" % name))
+def orator(action_name):
+    '''Executes orator commands'''
+    print(subprocess.getoutput("orator %s --config=database/orator_development.yml" % action_name))
 
 @task
 def install():

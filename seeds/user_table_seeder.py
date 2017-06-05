@@ -9,8 +9,7 @@ class UserTableSeeder(Seeder):
         """
         Defines the template of user test records
         """
-        return {
-            'id' : uuid.uuid1().hex,
+        return {            
             'uid' : faker.ssn(),
             'provider' : faker.company(),
             'first_name': faker.first_name(),
