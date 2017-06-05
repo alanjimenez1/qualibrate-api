@@ -43,7 +43,8 @@ class UsersList(Resource):
 
         # Retrieval of pagination parameters: page, per_page
         page_args = PAGINATOR.parse_args()
-        return orm_user.paginate(page_args['per_page'], page_args['page']).serialize(), 200
+        return orm_user.simple_paginate(page_args['per_page'], page_args['page']).serialize(), 200
+
 
     @API.expect(USER)
     def post(self):
