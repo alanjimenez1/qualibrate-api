@@ -71,7 +71,7 @@ class User(Resource):
 
     @API.marshal_with(USER)
     @API.response(200, 'User found')
-    def get(self, id):
+    def get(self, user_id):
         """
         Fetch a user by its identifier
 
@@ -80,7 +80,7 @@ class User(Resource):
         """
 
         try:
-            return orm_user.find_or_fail(id).serialize() or API.abort(404)
+            return orm_user.find_or_fail(user_id).serialize() or API.abort(404)
         except ModelNotFound:
             API.abort(404)
 
@@ -126,8 +126,11 @@ class UserWithProjects(Resource):
     Projects are the test asset containers in Qualibrate
     and contains all information about a test project
     """
-    def get(self, id):
+    def get(self, user_id):
+        """
+        A list of projects that belong to a particular user
+        """
         try:
-            return orm_user.find_or_fail(id).projects.serialize() or API.abort(404)
+            return orm_user.find_or_fail(user_id).projects.serialize() or API.abort(404)
         except ModelNotFound:
             API.abort(404)
