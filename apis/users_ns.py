@@ -64,7 +64,7 @@ class UsersList(Resource):
             return new_user.serialize(), 201
 
 
-@API.route('/<int:id>')
+@API.route('/<int:user_id>')
 @API.response(404, 'User not found')
 class User(Resource):
     """Endpoint for users operations."""
@@ -117,7 +117,7 @@ class User(Resource):
         if current_user.save():
             return current_user.serialize(), 202
 
-@API.route('/<int:id>/projects')
+@API.route('/<int:user_id>/projects')
 @API.response(404, 'User without projects')
 class UserWithProjects(Resource):
     """

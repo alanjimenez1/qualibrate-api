@@ -11,11 +11,10 @@ __license__ = "MIT"
 __revision__ = "1.0"
 
 from orator import Model
-from database import db
 from orator.orm import has_many
-from models.project import Project
+import models
 
-Model.set_connection_resolver(db)
+# pylint: disable=no-self-use
 class User(Model):
     '''Person registred into Qualibrate'''
     __fillable__ = ['first_name', 'last_name', 'email']
@@ -23,4 +22,5 @@ class User(Model):
 
     @has_many
     def projects(self):
-        return Project
+        '''A list of projects owned by this user'''
+        return models.project.Project
