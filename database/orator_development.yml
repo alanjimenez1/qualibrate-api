@@ -1,5 +1,6 @@
 databases:
-  default: sqlite  
+  default: sqlite
   sqlite:
       driver: sqlite
       database: ./database/development.sqlite
+      log_queries: True

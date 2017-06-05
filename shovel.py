@@ -14,11 +14,6 @@ from colorama import Fore, Back, Style, init
 init(autoreset=True)
 
 @task
-def orator(action_name):
-    '''Executes orator commands'''
-    print(subprocess.getoutput("orator %s --config=database/orator_development.yml" % action_name))
-
-@task
 def install():
     '''Install all project dependencies'''
     print(subprocess.getoutput("pip install -r requirements.txt"))
@@ -31,12 +26,18 @@ def test(module_folder):
 @task
 def lint():
     '''Run linter on code'''
-    print(subprocess.getoutput("pylint ."))
+    print('{0:>10}'.format("apis: ") + Style.BRIGHT + Fore.CYAN + Fore.RESET + subprocess.getoutput("pylint apis").split("\n")[2].split(" ")[6])
+    print('{0:>10}'.format("models: ") + Style.BRIGHT + Fore.CYAN + Fore.RESET + subprocess.getoutput("pylint models").split("\n")[2].split(" ")[6])
+    print('{0:>10}'.format("app: ") + Style.BRIGHT + Fore.CYAN + Fore.RESET + subprocess.getoutput("pylint app").split("\n")[2].split(" ")[6])
 
 @task
-def data_sample(table_name, rows=10):
+def data(table_name, rows=10, *columns):
     '''Returns a simple sample of data from the database'''
-    print(subprocess.getoutput('sqlite3 -header -column database/development.sqlite "select * from %s limit %s"' % (table_name, rows)))
+    parameters = '*'
+    if columns:
+        parameters = ','.join(columns)
+
+    print(subprocess.getoutput('sqlite3 -header -column database/development.sqlite "select %s from %s limit %s"' % (parameters, table_name, rows)))
 
 
 @task
