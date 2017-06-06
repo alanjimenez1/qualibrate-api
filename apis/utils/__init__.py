@@ -18,7 +18,6 @@ PAGINATOR.add_argument('page',
                        default=1,
                        help='Page number',
                        location='args')
-                       
 PAGINATOR.add_argument('per_page',
                        type=int,
                        required=False,

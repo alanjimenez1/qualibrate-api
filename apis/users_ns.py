@@ -24,7 +24,7 @@ USER = API.model('User', {
         required=True,
         description='First name',
         example='John',
-        pattern="^[a-zA-Z]"),
+        pattern=r'^[a-zA-Z]'),
     'last_name': fields.String(
         required=True,
         description='Last name',
@@ -34,7 +34,7 @@ USER = API.model('User', {
         required=True,
         description='Contact email',
         example='jsmith@gmail.com',
-        pattern="^\W@\W\.\W")
+        pattern=r'^\W@\W\.\W')
 })
 
 USER_DATA = USER.inherit('User', USER, {
@@ -43,9 +43,10 @@ USER_DATA = USER.inherit('User', USER, {
 
 
 # pylint: disable=no-self-use
+# pylint: disable=maybe-no-member
 @API.route('')
 class UsersList(Resource):
-    """Endpoint for list-based user results."""    
+    """Endpoint for list-based user results."""
 
     @API.marshal_list_with(USER_DATA)
     @API.response(200, 'User found')
@@ -110,8 +111,8 @@ class User(Resource):
             old_user = orm_user.find_or_fail(user_id)
         except ModelNotFound:
             API.abort(code=404, message='User not found')
-        except QueryException as e:
-            print(e)
+        except QueryException as query_exception:
+            print(query_exception)
 
 
         if old_user.delete():
