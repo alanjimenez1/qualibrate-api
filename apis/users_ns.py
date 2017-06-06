@@ -34,7 +34,7 @@ USER = API.model('User', {
         required=True,
         description='Contact email',
         example='jsmith@gmail.com',
-        pattern=r'^\W@\W\.\W')
+        pattern="[^@]+@[^@]+\.[^@]+")
 })
 
 USER_DATA = USER.inherit('User', USER, {
