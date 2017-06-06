@@ -9,20 +9,24 @@ __license__ = "MIT"
 __revision__ = "1.0"
 
 import ujson
-import uuid
 from flask import request
 from flask_restplus import Namespace, Resource, fields
 from models.user import User as orm_user
+from models.project import Project as orm_project
 from orator.exceptions.orm import ModelNotFound
+from orator.exceptions.query import QueryException
 from .utils import PAGINATOR
 
 API = Namespace('users', description='Platform access administration')
 
 USER = API.model('User', {
-    'id': fields.Integer(required=True, description='Unique identifier', example='1'),
-    'first_name': fields.String(required=True, description='First name', example='John'),
-    'last_name': fields.String(required=True, description='Last name', example='Smith'),
-    'email': fields.String(required=True, description='Contact email', example='jsmith@gmail.com')
+    'first_name': fields.String(required=True, description='First name', example='John', pattern="^[a-zA-Z]"),
+    'last_name': fields.String(required=True, description='Last name', example='Smith', pattern="^[a-zA-Z]"),
+    'email': fields.String(required=True, description='Contact email', example='jsmith@gmail.com', pattern="^\W@\W\.\W")
+})
+
+USER_DATA = USER.inherit('User', USER, {
+    'id': fields.Integer(required=True, description='Unique identifier', example='1')
 })
 
 # pylint: disable=no-self-use
@@ -30,7 +34,7 @@ USER = API.model('User', {
 class UsersList(Resource):
     """Endpoint for list-based user results."""
 
-    @API.marshal_list_with(USER)
+    @API.marshal_list_with(USER_DATA)
     @API.response(200, 'User found')
     @API.expect(PAGINATOR)
     def get(self):
@@ -46,7 +50,7 @@ class UsersList(Resource):
         return orm_user.for_page(page_args['page'], page_args['per_page']).get().serialize(), 200
 
 
-    @API.expect(USER)
+    @API.expect(USER, validate=True)
     def post(self):
         """
         Creates a new user
@@ -55,12 +59,7 @@ class UsersList(Resource):
         and as credentials to authenticate in the platform.
         """
 
-        # User skeleton
-        new_user = orm_user()
-        new_user.id = uuid.uuid1().hex
-
-        # Parsing payload from json string to dict
-        new_user.set_raw_attributes(json.loads(request.data))
+        new_user = orm_user(API.marshal(ujson.loads(request.data), USER))
         if new_user.save():
             return new_user.serialize(), 201
 
@@ -70,8 +69,8 @@ class UsersList(Resource):
 class User(Resource):
     """Endpoint for users operations."""
 
-    @API.response(200, 'User found')
-    @API.marshal_with(USER)
+    @API.response(200, 'User found', USER_DATA)
+    @API.marshal_with(USER_DATA)
     def get(self, user_id):
         """
         Fetch a user by its identifier
@@ -85,6 +84,7 @@ class User(Resource):
         except ModelNotFound:
             API.abort(code=404, message='User not found')
 
+
     @API.response(204, 'User successfully deleted')
     def delete(self, user_id):
         """
@@ -93,11 +93,16 @@ class User(Resource):
         Removes in cascade all information associated
         to an individual user in Qualibrate
         """
-
-        old_user = orm_user.find(user_id)
+        try:
+            old_user = orm_user.find_or_fail(user_id)
+        except ModelNotFound:
+            API.abort(code=404, message='User not found')
+        except QueryException as e:
+            print(e)
+            
 
         if old_user.delete():
-            return id, 204
+            return user_id, 204
 
 
     @API.response(202, 'User successfully updated')
@@ -111,10 +116,10 @@ class User(Resource):
         """
 
         # Empty user creation
-        current_user = orm_user.find(user_id)
+        current_user = orm_user.find_or_fail(user_id)
 
         # Parsing payload from json string to dict
-        current_user.set_raw_attributes(json.loads(request.data))
+        current_user.set_raw_attributes(ujson.loads(request.data))
         if current_user.save():
             return current_user.serialize(), 202
 
@@ -137,5 +142,11 @@ class UserWithProjects(Resource):
         except ModelNotFound:
             API.abort(404)
 
-    def put(self, user_id):
-        return {'id':user_id, 'name':'Herminio'}, 200
+    def put(self, user_id, project_id):
+        """
+        Updates a user adding a reference to an existing project
+        """
+        operation = orm_project.find(project_id).user().associate(orm_user.find(user_id))
+        print(operation)
+        if operation.save():
+            return {'message': 'Project added successfully'}, 201

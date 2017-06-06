@@ -1,12 +1,7 @@
 flask
 flask-restplus
 orator
-shovel
-Faker
-colorama
-httpie
-pylint
 gunicorn
-gevent
 PyMySQL
 meinheld
+ujson

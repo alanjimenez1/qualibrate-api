@@ -14,8 +14,9 @@ class CreateProjectsTable(Migration):
             table.string('code').nullable()
             table.string('icon').nullable()
             table.boolean('active').default(False)
-            table.string('user_id')
+            table.integer('user_id')
             table.timestamps()
+            table.foreign('user_id').references('id').on('users')
 
     def down(self):
         """

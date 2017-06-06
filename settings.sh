@@ -57,6 +57,7 @@ orator migrate:status -c "database/orator_$FLASK_ENVIRONMENT.yml"
 
 # Seed tables
 PYTHONPATH=.:models orator db:seed --seeder user_table_seeder -c database/orator_development.yml -d sqlite -f
+PYTHONPATH=.:models orator db:seed --seeder project_table_seeder -c database/orator_development.yml -d sqlite -f
 PYTHONPATH=.:models orator db:seed --seeder user_table_seeder -c "database/orator_$FLASK_ENVIRONMENT.yml" -d mysql -f
 
 # Full Database refresh

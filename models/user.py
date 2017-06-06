@@ -10,9 +10,9 @@ __author__ = "@canimus"
 __license__ = "MIT"
 __revision__ = "1.0"
 
+import models
 from orator import Model
 from orator.orm import has_many
-import models
 
 # pylint: disable=no-self-use
 class User(Model):
