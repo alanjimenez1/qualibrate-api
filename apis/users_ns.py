@@ -20,19 +20,32 @@ from .utils import PAGINATOR
 API = Namespace('users', description='Platform access administration')
 
 USER = API.model('User', {
-    'first_name': fields.String(required=True, description='First name', example='John', pattern="^[a-zA-Z]"),
-    'last_name': fields.String(required=True, description='Last name', example='Smith', pattern="^[a-zA-Z]"),
-    'email': fields.String(required=True, description='Contact email', example='jsmith@gmail.com', pattern="^\W@\W\.\W")
+    'first_name': fields.String(
+        required=True,
+        description='First name',
+        example='John',
+        pattern="^[a-zA-Z]"),
+    'last_name': fields.String(
+        required=True,
+        description='Last name',
+        example='Smith',
+        pattern="^[a-zA-Z]"),
+    'email': fields.String(
+        required=True,
+        description='Contact email',
+        example='jsmith@gmail.com',
+        pattern="^\W@\W\.\W")
 })
 
 USER_DATA = USER.inherit('User', USER, {
     'id': fields.Integer(required=True, description='Unique identifier', example='1')
 })
 
+
 # pylint: disable=no-self-use
 @API.route('')
 class UsersList(Resource):
-    """Endpoint for list-based user results."""
+    """Endpoint for list-based user results."""    
 
     @API.marshal_list_with(USER_DATA)
     @API.response(200, 'User found')
@@ -99,7 +112,7 @@ class User(Resource):
             API.abort(code=404, message='User not found')
         except QueryException as e:
             print(e)
-            
+
 
         if old_user.delete():
             return user_id, 204
@@ -117,8 +130,6 @@ class User(Resource):
 
         # Empty user creation
         current_user = orm_user.find_or_fail(user_id)
-
-        # Parsing payload from json string to dict
         current_user.set_raw_attributes(ujson.loads(request.data))
         if current_user.save():
             return current_user.serialize(), 202

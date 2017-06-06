@@ -12,7 +12,13 @@ from flask_restplus import reqparse
 
 PAGE_OPTS = [5, 10, 20, 30, 40, 50]
 PAGINATOR = reqparse.RequestParser()
-PAGINATOR.add_argument('page', type=int, required=False, default=1, help='Page number', location='args')
+PAGINATOR.add_argument('page',
+                       type=int,
+                       required=False,
+                       default=1,
+                       help='Page number',
+                       location='args')
+                       
 PAGINATOR.add_argument('per_page',
                        type=int,
                        required=False,
