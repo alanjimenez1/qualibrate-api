@@ -17,14 +17,14 @@ from .utils import PAGINATOR
 API = Namespace('projects', description='Project lifecycle and test asset administration')
 
 PROJECT = API.model('Project', {
-    'id': fields.String(required=True, description='Unique identifier', example='1'),
+    'id': fields.String(required=False, description='Unique identifier', example='1'),
     'name': fields.String(required=True, description='Project name', example='CRM Project'),
     'code': fields.String(required=False, description='Generic identifier', example='PRJ-001'),
     'description': fields.String(
         required=False,
         description='Details about project content',
         example='Automation suite for release 101-B'),
-    'active': fields.Boolean(required=False, description='In archive?', example='Yes/No')
+    'active': fields.Boolean(required=False, description='In archive?', example='Y/N')
 })
 
 # pylint: disable=no-self-use

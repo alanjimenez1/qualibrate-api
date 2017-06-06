@@ -34,11 +34,11 @@ USER = API.model('User', {
         required=True,
         description='Contact email',
         example='jsmith@gmail.com',
-        pattern="[^@]+@[^@]+\.[^@]+")
+        pattern=r"[^@]+@[^@]+\.[^@]+")
 })
 
 USER_DATA = USER.inherit('User', USER, {
-    'id': fields.Integer(required=True, description='Unique identifier', example='1')
+    'id': fields.Integer(required=False, description='Unique identifier', example='1')
 })
 
 
@@ -72,11 +72,14 @@ class UsersList(Resource):
         It uses the email as a primarily identifier of the user
         and as credentials to authenticate in the platform.
         """
+        try:
+            new_user = orm_user(API.marshal(ujson.loads(request.data), USER))
+            flag = new_user.save()
+        except QueryException:
+            API.abort(code=400, message='Integrity violation')
 
-        new_user = orm_user(API.marshal(ujson.loads(request.data), USER))
-        if new_user.save():
+        if flag:
             return new_user.serialize(), 201
-
 
 @API.route('/<int:user_id>')
 @API.response(404, 'User not found')
@@ -109,13 +112,13 @@ class User(Resource):
         """
         try:
             old_user = orm_user.find_or_fail(user_id)
+            flag = old_user.delete()
         except ModelNotFound:
             API.abort(code=404, message='User not found')
-        except QueryException as query_exception:
-            print(query_exception)
+        except QueryException:
+            API.abort(code=400, message='Integrity violation')
 
-
-        if old_user.delete():
+        if flag:
             return user_id, 204
 
 
@@ -138,7 +141,7 @@ class User(Resource):
 @API.route('/<int:user_id>/projects')
 @API.response(200, 'Project list')
 @API.response(404, 'User without projects')
-class UserWithProjects(Resource):
+class UserProjects(Resource):
     """
     Fetch all the projects for an individual user
 
@@ -154,11 +157,23 @@ class UserWithProjects(Resource):
         except ModelNotFound:
             API.abort(404)
 
+
+@API.route('/<int:user_id>/projects/<int:project_id>')
+@API.response(200, 'Project listing by user')
+@API.response(404, 'Project cannot be found or assigned to user')
+class UserAddSProjects(Resource):
+    """
+    Assigns the project ownership to a singular user
+
+    Users can own many projects, this association provides
+    a specified user the ownership of a project
+    """
     def put(self, user_id, project_id):
         """
         Updates a user adding a reference to an existing project
         """
         operation = orm_project.find(project_id).user().associate(orm_user.find(user_id))
-        print(operation)
         if operation.save():
-            return {'message': 'Project added successfully'}, 201
+            return orm_user.with_('projects').get().filter(
+                lambda x: x.id == user_id
+                ).serialize(), 201
