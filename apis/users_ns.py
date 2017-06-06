@@ -8,7 +8,7 @@ __author__ = "@canimus"
 __license__ = "MIT"
 __revision__ = "1.0"
 
-import json
+import ujson
 import uuid
 from flask import request
 from flask_restplus import Namespace, Resource, fields
@@ -43,7 +43,7 @@ class UsersList(Resource):
 
         # Retrieval of pagination parameters: page, per_page
         page_args = PAGINATOR.parse_args()
-        return orm_user.simple_paginate(page_args['per_page'], page_args['page']).serialize(), 200
+        return orm_user.for_page(page_args['page'], page_args['per_page']).get().serialize(), 200
 
 
     @API.expect(USER)
@@ -136,3 +136,6 @@ class UserWithProjects(Resource):
             return orm_user.find_or_fail(user_id).projects.serialize()
         except ModelNotFound:
             API.abort(404)
+
+    def put(self, user_id):
+        return {'id':user_id, 'name':'Herminio'}, 200
