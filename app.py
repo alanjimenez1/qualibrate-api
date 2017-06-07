@@ -12,6 +12,7 @@ __revision__ = "1.0"
 import logging
 from flask import Flask
 from apis import ENDPOINT
+import os
 
 # Log SQL Queries
 LOGGER = logging.getLogger('orator.connection.queries')

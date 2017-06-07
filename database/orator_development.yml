@@ -3,4 +3,4 @@ databases:
   sqlite:
       driver: sqlite
       database: ./database/development.sqlite
-      log_queries: False
+      log_queries: True

@@ -46,6 +46,7 @@ docker exec -it qfp-app bash -c 'PYTHONPATH=.:models orator db:seed --seeder use
 # Creates user migration
 orator make:model User -m
 orator make:model Project -m
+orator make:model File -m
 
 # Migrate
 orator migrate -c database/orator_development.yml -d sqlite -f

@@ -9,7 +9,7 @@ __author__ = "@canimus"
 __license__ = "MIT"
 __revision__ = "1.0"
 
-import json
+import ujson
 import subprocess
 
 # pylint: disable=no-self-use
@@ -17,8 +17,8 @@ class ApiRequest:
     '''A custom HTTP Client'''
     def get(self, url):
         '''Performs a HTTP GET method and returns a JSON object'''
-        return json.loads(subprocess.getoutput("http GET %s" % url))
+        return ujson.loads(subprocess.getoutput("http GET %s" % url))
 
     def post(self, url, data):
         '''Performs a HTTP POST method and returns a JSON object'''
-        return json.loads(subprocess.getoutput("http POST %s %s" % (url, data)))
+        return ujson.loads(subprocess.getoutput("http POST %s %s" % (url, data)))

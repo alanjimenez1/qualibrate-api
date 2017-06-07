@@ -5,3 +5,4 @@ gunicorn
 PyMySQL
 meinheld
 ujson
+python-libmagic

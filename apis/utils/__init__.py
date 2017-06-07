@@ -9,6 +9,7 @@ __license__ = "MIT"
 __revision__ = "1.0"
 
 from flask_restplus import reqparse
+import werkzeug
 
 PAGE_OPTS = [5, 10, 20, 30, 40, 50]
 PAGINATOR = reqparse.RequestParser()
@@ -25,3 +26,9 @@ PAGINATOR.add_argument('per_page',
                        default=10,
                        help='Items per page',
                        location='args')
+
+UPLOADER = reqparse.RequestParser()
+UPLOADER.add_argument('file',
+                     type=werkzeug.datastructures.FileStorage,
+                     location='files',
+                     help='File to be uploaded')
