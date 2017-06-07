@@ -49,7 +49,7 @@ class UsersList(Resource):
     """Endpoint for list-based user results."""
 
     @API.marshal_list_with(USER_DATA)
-    @API.response(200, 'User found')
+    @API.response(200, 'Users list')
     @API.expect(PAGINATOR)
     def get(self):
         """
@@ -82,7 +82,6 @@ class UsersList(Resource):
             return new_user.serialize(), 201
 
 @API.route('/<int:user_id>')
-@API.response(404, 'User not found')
 class User(Resource):
     """Endpoint for users operations."""
 
@@ -139,8 +138,6 @@ class User(Resource):
             return current_user.serialize(), 202
 
 @API.route('/<int:user_id>/projects')
-@API.response(200, 'Project list')
-@API.response(404, 'User without projects')
 class UserProjects(Resource):
     """
     Fetch all the projects for an individual user
@@ -157,10 +154,7 @@ class UserProjects(Resource):
         except ModelNotFound:
             API.abort(404)
 
-
 @API.route('/<int:user_id>/projects/<int:project_id>')
-@API.response(200, 'Project listing by user')
-@API.response(404, 'Project cannot be found or assigned to user')
 class UserAddSProjects(Resource):
     """
     Assigns the project ownership to a singular user
