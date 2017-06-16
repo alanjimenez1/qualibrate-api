@@ -13,6 +13,7 @@ from flask import request
 from flask_restplus import Namespace, Resource, fields
 from models.user import User as orm_user
 from models.project import Project as orm_project
+from models.file import File as orm_file
 from orator.exceptions.orm import ModelNotFound
 from orator.exceptions.query import QueryException
 from .utils import PAGINATOR
@@ -164,10 +165,28 @@ class UserAddSProjects(Resource):
     """
     def put(self, user_id, project_id):
         """
-        Updates a user adding a reference to an existing project
+        User takes ownership of a project
         """
         operation = orm_project.find(project_id).user().associate(orm_user.find(user_id))
         if operation.save():
             return orm_user.with_('projects').get().filter(
                 lambda x: x.id == user_id
                 ).serialize(), 201
+
+@API.route('/<int:user_id>/files')
+class UserFiles(Resource):
+    """
+    Fetch all the files for an individual user
+
+    Retrieve all reference files that belong
+    to this user, it includes attachments, images,
+    references and all the files used in Qualibrate
+    """
+    def get(self, user_id):
+        """
+        A list of files that belong to a particular user
+        """
+        try:            
+            return orm_file.select('uuid','name','mime','created_at','updated_at').where('user_id','=',user_id).get().serialize(), 200
+        except ModelNotFound:
+            API.abort(404)

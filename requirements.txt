@@ -6,3 +6,4 @@ PyMySQL
 meinheld
 ujson
 python-libmagic
+fastavro

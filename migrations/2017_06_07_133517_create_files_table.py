@@ -9,8 +9,11 @@ class CreateFilesTable(Migration):
         """
         with self.schema.create('files') as table:
             table.increments('id')
+            table.string('uuid')
             table.string('name')
             table.string('path')
+            table.string('mime')
+            table.integer('user_id')
             table.timestamps()
             table.foreign('user_id').references('id').on('users')
 
