@@ -51,7 +51,7 @@ class FileUpload(Resource):
 
         Allowance: [.pdf, .jpeg, .jpg, .gif, .png, .txt]
         """
-        file = UPLOADER.parse_args()['file']
+        file = UPLOADER.parse_args()['file']        
 
         # Allocation of request parameters to model attributes
         new_file = orm_file(API.marshal(request.data, FILE))
@@ -61,12 +61,11 @@ class FileUpload(Resource):
 
         # # Storing file under application ./uploads
         flag = file.save(new_file.path)
-        #
-        # # Obtains the real mime-type of the file
+
+        # Obtains the real mime-type of the file
         new_file.mime = magic.Magic().from_file(new_file.path)
         if not new_file.mime in UPLOAD_FORMAT_ALLOWANCE:
             API.abort(400, 'File type is not allowed')
-        #
+
         if orm_user.find_or_fail(request.form['user_id']).files().save(new_file):
             return new_file.serialize(), 201
-        # return 'OK', 200

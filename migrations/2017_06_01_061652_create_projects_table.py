@@ -1,6 +1,5 @@
 from orator.migrations import Migration
 
-
 class CreateProjectsTable(Migration):
 
     def up(self):

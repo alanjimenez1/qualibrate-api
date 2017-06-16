@@ -19,6 +19,7 @@ class ApiRequest:
         '''Performs a HTTP GET method and returns a JSON object'''
         return ujson.loads(subprocess.getoutput("http GET %s" % url))
 
-    def post(self, url, data):
+    def post(self, url, data, form="-f"):
         '''Performs a HTTP POST method and returns a JSON object'''
-        return ujson.loads(subprocess.getoutput("http POST %s %s" % (url, data)))
+        command = "http %s POST %s %s" % (form, url, data)        
+        return ujson.loads(subprocess.getoutput(command))
