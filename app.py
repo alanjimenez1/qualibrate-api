@@ -1,18 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-Python-Flask based application with various endpoits
-defined in Flask-restplus and swagger definitions
-
-__http://host:5000/swagger__
-"""
-__author__ = "@canimus"
-__license__ = "MIT"
-__revision__ = "1.0"
 
 import logging
 from flask import Flask
 from apis import ENDPOINT
-import os
 
 # Log SQL Queries
 LOGGER = logging.getLogger('orator.connection.queries')

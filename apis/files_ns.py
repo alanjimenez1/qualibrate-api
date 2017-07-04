@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-This encloses all operations required to manipulate files
-in the Qualibrate Foundation Cloud platform
-"""
-
-__author__ = "@canimus"
-__license__ = "MIT"
-__revision__ = "1.0"
 
 import ujson
 import os
@@ -37,6 +29,8 @@ UPLOAD_PATH = 'uploads'
 UPLOAD_FORMAT_ALLOWANCE = ['image/png', 'application/pdf', 'image/jpeg', 'image/gif', 'text/plain']
 
 # pylint: disable=no-self-use
+
+
 @API.route('')
 class FileUpload(Resource):
     """Endpoint for handling file uploads"""
@@ -51,7 +45,7 @@ class FileUpload(Resource):
 
         Allowance: [.pdf, .jpeg, .jpg, .gif, .png, .txt]
         """
-        file = UPLOADER.parse_args()['file']        
+        file = UPLOADER.parse_args()['file']
 
         # Allocation of request parameters to model attributes
         new_file = orm_file(API.marshal(request.data, FILE))

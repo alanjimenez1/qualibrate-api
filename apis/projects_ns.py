@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-This encloses all operations required to manipulate projects
-in the Qualibrate Foundation Cloud platform
-"""
-
-__author__ = "@canimus"
-__license__ = "MIT"
-__revision__ = "1.0"
 
 import json
 from flask import request
@@ -26,6 +18,7 @@ PROJECT = API.model('Project', {
         example='Automation suite for release 101-B'),
     'active': fields.Boolean(required=False, description='In archive?', example='Y/N')
 })
+
 
 # pylint: disable=no-self-use
 @API.route('')

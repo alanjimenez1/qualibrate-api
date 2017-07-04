@@ -1,11 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-This module contains the blueprints for all
-entities in the Qualibrate Foundation Cloud platform
-"""
-__author__ = "@canimus"
-__license__ = "MIT"
-__revision__ = "1.0"
 
 from flask_restplus import Api
 from .users_ns import API as users
@@ -18,6 +11,6 @@ ENDPOINT = Api(
     description='Testing, documentation and training seamless framework'
 )
 
-ENDPOINT.add_namespace(users) # Users
-ENDPOINT.add_namespace(projects) # Projects
-ENDPOINT.add_namespace(files) # Files
+ENDPOINT.add_namespace(users)  # Users
+ENDPOINT.add_namespace(projects)  # Projects
+ENDPOINT.add_namespace(files)  # Files
