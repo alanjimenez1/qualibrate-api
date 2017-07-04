@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-This encloses all operations required to manipulate users
-in the Qualibrate Foundation Cloud platform
-"""
-
-__author__ = "@canimus"
-__license__ = "MIT"
-__revision__ = "1.0"
 
 import ujson
 from flask import request
@@ -186,7 +178,7 @@ class UserFiles(Resource):
         """
         A list of files that belong to a particular user
         """
-        try:            
+        try:
             return orm_file.select('uuid','name','mime','created_at','updated_at').where('user_id','=',user_id).get().serialize(), 200
         except ModelNotFound:
             API.abort(404)

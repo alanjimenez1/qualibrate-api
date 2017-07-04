@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import ujson
 import os
 import uuid
 import magic
@@ -12,13 +11,16 @@ from werkzeug.utils import secure_filename
 from .utils import UPLOADER
 
 
-API = Namespace('files', description='Handling of attachments and image upload for Qualibrate')
+API = Namespace(
+    'files', description='Handling of attachments and image upload for Qualibrate')
 
 FILE = API.model('File', {
     'user_id': fields.Integer(required=True, description='The owner of this file', example='10'),
-    'uuid': fields.String(required=False, description='Generated unique hash', example='3445-2334-2111'),
+    'uuid': fields.String(required=False, description='Generated unique hash',
+                          example='3445-2334-2111'),
     'name': fields.String(required=True, description='File name', example='my_file.pdf'),
-    'path': fields.String(required=False, description='File name', example='/device/storage/folder'),
+    'path': fields.String(required=False, description='File name',
+                          example='/device/storage/folder'),
     'mime': fields.String(required=False, description='File name', example='application/pdf')
 })
 
@@ -26,7 +28,8 @@ FILE = API.model('File', {
 UPLOAD_PATH = 'uploads'
 
 # File mime types allowed in this end point
-UPLOAD_FORMAT_ALLOWANCE = ['image/png', 'application/pdf', 'image/jpeg', 'image/gif', 'text/plain']
+UPLOAD_FORMAT_ALLOWANCE = [
+    'image/png', 'application/pdf', 'image/jpeg', 'image/gif', 'text/plain']
 
 # pylint: disable=no-self-use
 
@@ -51,14 +54,16 @@ class FileUpload(Resource):
         new_file = orm_file(API.marshal(request.data, FILE))
         new_file.uuid = str(uuid.uuid4())
         new_file.name = secure_filename(file.name)
-        new_file.path = os.path.join(os.path.abspath('.'), UPLOAD_PATH, new_file.uuid)
+        new_file.path = os.path.join(
+            os.path.abspath('.'), UPLOAD_PATH, new_file.uuid)
 
-        # # Storing file under application ./uploads
-        flag = file.save(new_file.path)
+        # Storing file under application ./uploads
+        # TODO: Assign to flag and validate successful result
+        file.save(new_file.path)
 
         # Obtains the real mime-type of the file
         new_file.mime = magic.Magic().from_file(new_file.path)
-        if not new_file.mime in UPLOAD_FORMAT_ALLOWANCE:
+        if new_file.mime not in UPLOAD_FORMAT_ALLOWANCE:
             API.abort(400, 'File type is not allowed')
 
         if orm_user.find_or_fail(request.form['user_id']).files().save(new_file):
