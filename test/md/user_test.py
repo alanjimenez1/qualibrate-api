@@ -1,12 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-User model test cases for attributes
-Business Logic and validations
-"""
-
-__author__ = "@canimus"
-__license__ = "MIT"
-__revision__ = "1.0"
 
 import unittest
 from models.user import User

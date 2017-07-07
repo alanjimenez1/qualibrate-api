@@ -1,14 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Entity mapping an end-user of the
-application. Main associations are:
-- Project
-- TestAsset
-"""
-
-__author__ = "@canimus"
-__license__ = "MIT"
-__revision__ = "1.0"
 
 import models
 from orator import Model
