@@ -1,4 +1,4 @@
-FROM python:3.6.1
+FROM python:3.6.3
 
 EXPOSE 5000
 WORKDIR /usr/src/app
